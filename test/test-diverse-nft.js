@@ -7,10 +7,16 @@ describe("DiverseNFT", function () {
 
   beforeEach(async () => {
     accounts = await ethers.getSigners();
-    marketPlaceAddress = accounts[1].address
     const DiverseNFT = await ethers.getContractFactory("DiverseNFT")
+    const DiverseNftMarketplace = await ethers.getContractFactory("DiverseNftMarketplace")
+
+    let marketplaceContract = await DiverseNftMarketplace.deploy()
+    await marketplaceContract.deployed()
+    marketPlaceAddress = marketplaceContract.address
+
     contract = await DiverseNFT.deploy("Amateur Developers","AmDev",marketPlaceAddress)
     await contract.deployed()
+
   });
   
   it("Testing Mint", async function () {

@@ -1,14 +1,20 @@
 import React from 'react';
 
+import Header from './components/Header/Header.js'
+
 // importing MyRouts where we located all of our theme
-import MyRouts from './routers/routes';
+import MyRoutes from './routers/routes';
 import './main.css';
 
+import { RecoilRoot, } from 'recoil';
+
 function App() {
+
   return (
-    <div>
-      <MyRouts />
-    </div>
+    <RecoilRoot>
+      <Header />
+      <MyRoutes />
+    </RecoilRoot>
   );
 }
 

@@ -1,6 +1,13 @@
+import { ethers } from "ethers";
+import axios from 'axios'
 import React, {useEffect, useState} from 'react'
 import AuthorProfile from "../AuthorProfile/AuthorProfile";
 import { NFTStorage } from 'nft.storage'
+
+import Swal from 'sweetalert2'
+
+import diverseNftAbi from '../../abi/contracts/DiverseNFT.sol/DiverseNFT.json'
+import { DiverseNftAddress } from '../../constants.js'
 
 
 export default function Create() {
@@ -13,23 +20,67 @@ export default function Create() {
   const NFT_STORAGE_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDRFOWFBOUFGZkFkMTk3M2M4NmUxQjNEODA0OTU0OTc5ODYxRjE0NTkiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY0NzUxMTQzMDY5OSwibmFtZSI6ImRlbW8ifQ.tuQF7fhWdmIUYGjUBCfOhioWcDWedrLIAe8JFWzxQcA'
 
   async function handleSubmit(){
-    if(file == null) return;
-    if(name == '') return;
-    if(desc == '') return;
+    if(file == null || name == '' || desc == ''){
+      Swal.fire({
+        title: 'Missing Parameters!',
+        icon: 'error',
+        confirmButtonText: 'Okay'
+      })
+      return
+    };
+
+    let provider = new ethers.providers.Web3Provider(window.ethereum)
+    let signer = provider.getSigner()
+    let nftContract = new ethers.Contract(DiverseNftAddress, diverseNftAbi, provider);
+    let nftContractSigner = nftContract.connect(signer);
+
+    if(nftContract == null || nftContractSigner == null){
+      Swal.fire({
+        title: 'Nft Contract Not Connected',
+        icon: 'error',
+        confirmButtonText: 'Okay'
+      })
+      return
+    };
 
     setUploadLoadingState(true)
 
-    const client = new NFTStorage({ token: NFT_STORAGE_TOKEN })
+    // const client = new NFTStorage({ token: NFT_STORAGE_TOKEN })
+    const formData = new FormData()
+    formData.append('name',name);
+    formData.append('desc',desc);
+    formData.append('nftImage',file);
 
-    const metadata = await client.store({
-      name: name,
-      description: desc,
-      image: file
-    })
+    
+    console.log(formData)
+
+    axios.post('http://localhost:3500/nftUpload',formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "boundary": formData._boundary,
+      },
+    }).then(function (response) { console.log(response); }).catch(function (error) { console.log(error); });
+
+    // const metadata = await client.store({
+    //   name: name,
+    //   description: desc,
+    //   image: file
+    // })
+
+    // let nftResult = await nftContractSigner.userMint(metadata.url)
 
     setUploadLoadingState(false)
 
-    console.log(metadata)
+    // if(nftResult){
+    //   Swal.fire({
+    //     title: 'NFT Created!',
+    //     text: metadata.url,
+    //     icon: 'success',
+    //     confirmButtonText: 'Damn Diverse'
+    //   })
+    // }
+
   }
 
   return (

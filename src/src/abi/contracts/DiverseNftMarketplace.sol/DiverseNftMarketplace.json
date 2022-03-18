@@ -1,0 +1,21 @@
+[
+  "event MarketOrderCreated(uint256 indexed,address indexed,uint256 indexed,address,address,uint256,bool)",
+  "event OwnershipTransferred(address indexed,address indexed)",
+  "function createMarketOrder(address,uint256,uint256) payable",
+  "function fetchUserPurchasedNFTs() view returns (tuple(uint256,address,uint256,address,address,uint256,bool)[])",
+  "function fetchUserSellingNFTs() view returns (tuple(uint256,address,uint256,address,address,uint256,bool)[])",
+  "function getAllMarketOrders() view returns (tuple(uint256,address,uint256,address,address,uint256,bool)[])",
+  "function getAllMarketOrdersLength() view returns (uint256)",
+  "function getMarketNotSoldOrders() view returns (tuple(uint256,address,uint256,address,address,uint256,bool)[])",
+  "function getMarketNotSoldOrdersLength() view returns (uint256)",
+  "function getMarketOrder(uint256) view returns (tuple(uint256,address,uint256,address,address,uint256,bool))",
+  "function getMarketSoldOrders() view returns (tuple(uint256,address,uint256,address,address,uint256,bool)[])",
+  "function getMarketSoldOrdersLength() view returns (uint256)",
+  "function listingPrice() view returns (uint256)",
+  "function nftPurchase(address,uint256) payable",
+  "function onERC721Received(address,address,uint256,bytes) pure returns (bytes4)",
+  "function owner() view returns (address)",
+  "function renounceOwnership()",
+  "function setListingPrice(uint256) returns (uint256)",
+  "function transferOwnership(address)"
+]

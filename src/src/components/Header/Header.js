@@ -1,6 +1,49 @@
-import React from 'react'
+import React, {useEffect, useMemo} from 'react'
+import { useRecoilState } from 'recoil';
+
+import metamaskAccountsAtom from '../../atoms/metamaskAccountsAtom.js'
+import haveMetamaskAtom from '../../atoms/haveMetamaskAtom.js'
+import metamaskSelectedAccountAtom from '../../atoms/metamaskSelectedAccountAtom.js'
+
+import metamaskHooks from '../../metamask-hooks/metamask-hooks.js'
 
 export default function Header() {
+  const [metamaskAccounts,setMetamaskAccounts] = useRecoilState(metamaskAccountsAtom)
+  const [metamaskSelectedAccount,setMetamaskSelectedAccount] = useRecoilState(metamaskSelectedAccountAtom)
+  const [haveMetamask,setHaveMetamask] = useRecoilState(haveMetamaskAtom)
+
+  const showMetamaskAccount = useMemo(() => { 
+    if(metamaskSelectedAccount !== '' && metamaskSelectedAccount.length > 1){
+      return metamaskSelectedAccount.substring(0,7) 
+    }else{
+      return ''
+    }
+  },[metamaskSelectedAccount])
+
+  useEffect(() => {
+    if(metamaskHooks.utils.checkSelectedAccount()){
+      setMetamaskSelectedAccount(metamaskHooks.utils.getSelectedAccount())
+    }
+  },[])
+
+
+  async function handleConnectButton(){
+    if(metamaskSelectedAccount != '') return;
+
+
+    if(metamaskAccounts.length == 0){
+      let result = await metamaskHooks.utils.connectAccounts(haveMetamask,{ log:true })
+      if(result.succeed){
+        setMetamaskAccounts(result.data)
+
+        if(metamaskHooks.utils.checkSelectedAccount()){
+          setMetamaskSelectedAccount(metamaskHooks.utils.getSelectedAccount())
+        }
+      }
+    }  
+  }
+
+
   return (
     <header id="header">
       {/* Navbar */}
@@ -9,12 +52,12 @@ export default function Header() {
           {/* Navbar Brand*/}
           <div className="ml-auto" />
           {/* Navbar */}
-          <ul className="navbar-nav items mx-auto">
+          <ul className="mx-auto navbar-nav items">
             <li className="nav-item dropdown">
               <a className="nav-link" href="/">Home</a>
             </li>
             <li className="nav-item dropdown">
-              <a className="nav-link" href="#">Explore <i className="fas fa-angle-down ml-1" /></a>
+              <a className="nav-link" href="#">Explore <i className="ml-1 fas fa-angle-down" /></a>
               <ul className="dropdown-menu">
                 <li className="nav-item"><a href="/explore-1" className="nav-link">Explore Style 1</a></li>
                 <li className="nav-item"><a href="/explore-2" className="nav-link">Explore Style 2</a></li>
@@ -28,7 +71,7 @@ export default function Header() {
               <a href="/activity" className="nav-link">Activity</a>
             </li>
             <li className="nav-item dropdown">
-              <a className="nav-link" href="#">Community <i className="fas fa-angle-down ml-1" /></a>
+              <a className="nav-link" href="#">Community <i className="ml-1 fas fa-angle-down" /></a>
               <ul className="dropdown-menu">
                 <li className="nav-item"><a href="/blog" className="nav-link">Blog</a></li>
                 <li className="nav-item"><a href="/blog-single" className="nav-link">Blog Single</a></li>
@@ -36,7 +79,7 @@ export default function Header() {
               </ul>
             </li>
             <li className="nav-item dropdown">
-              <a className="nav-link" href="#">Pages <i className="fas fa-angle-down ml-1" /></a>
+              <a className="nav-link" href="#">Pages <i className="ml-1 fas fa-angle-down" /></a>
               <ul className="dropdown-menu">
                 <li className="nav-item"><a href="/authors" className="nav-link">Authors</a></li>
                 <li className="nav-item"><a href="/author" className="nav-link">Author</a></li>
@@ -62,14 +105,16 @@ export default function Header() {
           <ul className="navbar-nav toggle">
             <li className="nav-item">
               <a href="#" className="nav-link" data-toggle="modal" data-target="#menu">
-                <i className="fas fa-bars toggle-icon m-0" />
+                <i className="m-0 fas fa-bars toggle-icon" />
               </a>
             </li>
           </ul>
           {/* Navbar Action Button */}
           <ul className="navbar-nav action">
-            <li className="nav-item ml-3">
-              <a href="#" className="btn ml-lg-auto btn-bordered-white"><i className="icon-wallet mr-md-2" />Connect</a>
+            <li className="ml-3 nav-item">
+              <a href="#" onClick={() => { handleConnectButton() }} className="btn ml-lg-auto btn-bordered-white"><i className="icon-wallet mr-md-2" />
+                { metamaskSelectedAccount !== '' ? showMetamaskAccount + '...' : 'Connect' }
+              </a>
             </li>
           </ul>
         </div>

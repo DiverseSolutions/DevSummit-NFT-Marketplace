@@ -1,4 +1,4 @@
-import React from "react";
+import React,{ useEffect,Suspense } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 // importing all the themes
@@ -21,10 +21,11 @@ import Login from "../themes/login";
 import Signup from "../themes/signup";
 import Contact from "../themes/contact";
 
-class MyRouts extends React.Component {
-  render() {
-    return (
-      <div>
+
+export default function MyRoutes() {
+
+  return (
+    <div>
         <Router>
           <Switch>
             <Route exact path="/" component={ThemeOne} />
@@ -47,8 +48,6 @@ class MyRouts extends React.Component {
             <Route exact path="/contact" component={Contact} />
           </Switch>
         </Router>
-      </div>
-    );
-  }
+    </div>
+  )
 }
-export default MyRouts;

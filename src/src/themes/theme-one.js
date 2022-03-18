@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
+import { useRecoilState,useRecoilValue } from 'recoil';
 
 import Header from '../components/Header/Header';
 import Hero from '../components/Hero/Hero';
@@ -12,24 +13,32 @@ import ModalSearch from '../components/Modal/ModalSearch';
 import ModalMenu from '../components/Modal/ModalMenu';
 import Scrollup from '../components/Scrollup/Scrollup';
 
-class ThemeOne extends Component {
-    render() {
-        return (
-            <div className="main">
-                <Header />
-                <Hero />
-                <Auctions />
-                <TopSeller />
-                <Collections />
-                <Explore />
-                <Work />
-                <Footer />
-                <ModalSearch />
-                <ModalMenu />
-                <Scrollup />
-            </div>
-        );
-    }
-}
+import haveMetamaskAtom from '../atoms/haveMetamaskAtom.js'
+import metamaskHooks from '../metamask-hooks/metamask-hooks.js'
 
-export default ThemeOne;
+export default function ThemeOne() {
+  const [haveMetamask,setHaveMetamask] = useRecoilState(haveMetamaskAtom)
+
+  useEffect(() => {
+    if(metamaskHooks.utils.checkMetamask({ log: true })){
+      setHaveMetamask(true)
+    }
+  },[])
+
+  return (
+    <div className="main">
+      <React.Suspense fallback={<div>Loading...</div>}>
+        <Hero />
+        <Auctions />
+        <TopSeller />
+        <Collections />
+        <Explore />
+        <Work />
+        <Footer />
+        <ModalSearch />
+        <ModalMenu />
+        <Scrollup />
+      </React.Suspense>
+    </div>
+  )
+}

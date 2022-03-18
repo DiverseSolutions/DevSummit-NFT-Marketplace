@@ -13,7 +13,7 @@ class Create extends Component {
         return (
             <div className="main">
                 <Header />
-                <Breadcrumb title="Create" subpage="Pages" page="Create" />
+                {/* <Breadcrumb title="Create" subpage="Pages" page="Create" /> */}
                 <Creates />
                 <Footer />
                 <ModalSearch />

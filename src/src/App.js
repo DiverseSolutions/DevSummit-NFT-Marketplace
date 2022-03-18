@@ -1,7 +1,8 @@
 import React from 'react';
 
 // importing MyRouts where we located all of our theme
-import MyRouts from './routers/routes'
+import MyRouts from './routers/routes';
+import './main.css';
 
 function App() {
   return (

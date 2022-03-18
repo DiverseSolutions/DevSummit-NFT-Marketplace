@@ -21,8 +21,8 @@ export default function Hero() {
             <p>{data.content}</p>
             {/* Buttons */}
             <div className="button-group">
-              <a className="btn btn-bordered-white" href="/explore-1"><i className="icon-rocket mr-2" />{data.btn_1}</a>
-              <a className="btn btn-bordered-white" href="/create"><i className="icon-note mr-2" />{data.btn_2}</a>
+              <a className="btn btn-bordered-white" href="/explore-3"><i className="mr-2 icon-rocket" />{data.btn_1}</a>
+              <a className="btn btn-bordered-white" href="/create"><i className="mr-2 icon-note" />{data.btn_2}</a>
             </div>
           </div>
         </div>

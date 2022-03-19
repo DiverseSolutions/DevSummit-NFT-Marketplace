@@ -11,11 +11,18 @@ import "@openzeppelin/contracts/security/PullPayment.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
+import "./DiverseNFT.sol";
+
 contract DiverseNftMarketplace is Ownable, IERC721Receiver, ReentrancyGuard {
     using Counters for Counters.Counter;
     Counters.Counter private _orderIds;
     Counters.Counter private _ordersSold;
     uint256 public listingPrice = 0.1 ether;
+    uint256 public creationPrice = 0.1 ether;
+
+    mapping(string => address) public _nftCollectionNameMapping;
+    mapping(string => address) public _nftCollectionSymbolMapping;
+    Counters.Counter private _nftCollectionCounter;
 
     struct MarketOrder {
         uint256 orderId;
@@ -38,6 +45,23 @@ contract DiverseNftMarketplace is Ownable, IERC721Receiver, ReentrancyGuard {
         uint256 price,
         bool isSold
     );
+
+    function createCollection(string memory _name,string memory _symbol) payable public returns(address) {
+      require(msg.value == creationPrice, "Price must be same as creation price");
+      DiverseNFT _nft = new DiverseNFT(_name,_symbol,address(this));
+
+      _nftCollectionNameMapping[_name] = address(_nft);
+      _nftCollectionSymbolMapping[_symbol] = address(_nft);
+
+      _nftCollectionCounter.increment();
+
+      return address(_nft);
+    }
+
+    function getCollectionLength() public view returns(uint){
+      uint _collectionAmount = _nftCollectionCounter.current();
+      return _collectionAmount;
+    }
 
     function createMarketOrder(address nftContract, uint256 tokenId, uint256 price) public payable nonReentrant {
         require(nftContract != address(0), "address can't be 0");

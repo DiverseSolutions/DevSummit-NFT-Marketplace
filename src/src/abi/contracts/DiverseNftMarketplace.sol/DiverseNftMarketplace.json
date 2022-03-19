@@ -1,6 +1,7 @@
 [
   "event MarketOrderCreated(uint256 indexed,address indexed,uint256 indexed,address,address,uint256,bool)",
   "event OwnershipTransferred(address indexed,address indexed)",
+  "function createCollection(string,string) returns (address)",
   "function createMarketOrder(address,uint256,uint256) payable",
   "function fetchUserPurchasedNFTs() view returns (tuple(uint256,address,uint256,address,address,uint256,bool)[])",
   "function fetchUserSellingNFTs() view returns (tuple(uint256,address,uint256,address,address,uint256,bool)[])",
